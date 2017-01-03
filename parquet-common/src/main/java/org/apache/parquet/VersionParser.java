@@ -31,7 +31,7 @@ import static org.apache.parquet.Preconditions.checkArgument;
  */
 public class VersionParser {
   // example: parquet-mr version 1.8.0rc2-SNAPSHOT (build ddb469afac70404ea63b72ed2f07a911a8592ff7)
-  public static final String FORMAT = "(.*?)\\s+version\\s*(?:([^(]*?)\\s*(?:\\(\\s*build\\s*([^)]*?)\\s*\\))?)?";
+  public static final String FORMAT = "(.*?)\\s+version\\s*.*";
   public static final Pattern PATTERN = Pattern.compile(FORMAT);
 
   public static class ParsedVersion {
@@ -113,14 +113,12 @@ public class VersionParser {
     }
 
     String application = matcher.group(1);
-    String semver = matcher.group(2);
-    String appBuildHash = matcher.group(3);
 
     if (Strings.isNullOrEmpty(application)) {
       throw new VersionParseException("application cannot be null or empty");
     }
 
-    return new ParsedVersion(application, semver, appBuildHash);
+    return new ParsedVersion(application, null, null);
   }
 
   public static class VersionParseException extends Exception {
